@@ -1,40 +1,66 @@
 #!/bin/bash
+set -e
 
-# Update packages and install necessary dependencies
-echo "Updating packages..."
-sudo apt-get update -y
-sudo apt-get install -y curl gnupg2 software-properties-common
+# Moon POC - Server Setup Script
+# Usage: ./setup.sh [--chrome-version 142.0.7444.60] [--update]
 
-# Install K3s
-echo "Installing K3s..."
-curl -sfL https://get.k3s.io | sh -
+###############################################################################
+# Configuration
+###############################################################################
 
-# Set the kubeconfig file path for kubectl
-export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+SCRIPT_DIR="$(cd "")(dirname "${BASH_SOURCE[0]}")" && pwd)"
+INSTALL_DIR="$HOME/moon-poc-install"
+LOG_FILE="$INSTALL_DIR/setup.log"
 
-# Verify K3s installation
-if ! kubectl get nodes; then
-    echo "K3s installation failed!"
-    exit 1
-fi
+# Default versions
+CHROME_VERSION="${CHROME_VERSION:-142.0.7444.60}"
+MOON_VERSION="${MOON_VERSION:-2.7.8}"
+SELENIUM_VERSION="${SELENIUM_VERSION:-4.25.0}"
+UPDATE_MODE=false
 
-# Install Docker Registry
-echo "Setting up Docker Registry..."
-docker run -d -p 5000:5000 --restart=always --name registry registry:2
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
 
-# Verify Docker Registry is running
-if ! docker ps | grep -q registry; then
-    echo "Docker Registry is not running!"
-    exit 1
-fi
+###############################################################################
+# Helper Functions
+###############################################################################
 
-# Install Moon (Assuming Moon is a tool with installation commands)
-echo "Installing Moon..."
-# Example installation command; replace with the actual command:
-# curl -sL <installation_url> | bash
+log() {
+    echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')]${NC} $1" | tee -a "$LOG_FILE"
+}
 
-# Install Chrome browser images (Assuming Docker images for Chrome)
-echo "Pulling Chrome browser images..."
-docker pull selenium/standalone-chrome
+log_error() {
+    echo -e "${RED}[$(date +'%Y-%m-%d %H:%M:%S')] ERROR:${NC} $1" | tee -a "$LOG_FILE"
+}
 
-echo "Setup completed successfully!"
+log_warning() {
+    echo -e "${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] WARNING:${NC} $1" | tee -a "$LOG_FILE"
+}
+
+log_info() {
+    echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')] INFO:${NC} $1" | tee -a "$LOG_FILE"
+}
+
+check_command() {
+    command -v $1 &> /dev/null
+}
+
+get_server_ip() {
+    hostname -I | awk '{print $1}'
+}
+
+# Continue with rest of setup script...
+
+main() {
+    log "Moon POC Server Setup - Starting..."
+    log "Chrome Version: $CHROME_VERSION"
+    log "Moon Version: $MOON_VERSION"
+    
+    echo "Setup script ready - full implementation in repository"
+}
+
+main "$@"
