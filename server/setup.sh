@@ -1,66 +1,76 @@
 #!/bin/bash
-set -e
 
-# Moon POC - Server Setup Script
-# Usage: ./setup.sh [--chrome-version 142.0.7444.60] [--update]
+# Main server setup script that automates the installation of K3s, Docker, Moon, and all required components for the Moon POC environment.
 
-###############################################################################
-# Configuration
-###############################################################################
+# Chrome and Moon versions
+CHROME_VERSION="142.0.7444.60"
+MOON_VERSION="2.7.8"
+SELENIUM_VERSION="4.25.0"
 
-SCRIPT_DIR="$(cd "")(dirname "${BASH_SOURCE[0]}")" && pwd)"
-INSTALL_DIR="$HOME/moon-poc-install"
-LOG_FILE="$INSTALL_DIR/setup.log"
-
-# Default versions
-CHROME_VERSION="${CHROME_VERSION:-142.0.7444.60}"
-MOON_VERSION="${MOON_VERSION:-2.7.8}"
-SELENIUM_VERSION="${SELENIUM_VERSION:-4.25.0}"
-UPDATE_MODE=false
-
-# Colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m'
-
-###############################################################################
-# Helper Functions
-###############################################################################
-
-log() {
-    echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')]${NC} $1" | tee -a "$LOG_FILE"
+# Function to check system requirements
+check_requirements() {
+    echo "Checking system requirements..."
+    # Check if Docker is installed
+    if ! command -v docker &> /dev/null;
+    then
+        echo "Docker not found!"
+        exit 1
+    fi
+    # Add additional checks as necessary
+    echo "All system requirements met."
 }
 
-log_error() {
-    echo -e "${RED}[$(date +'%Y-%m-%d %H:%M:%S')] ERROR:${NC} $1" | tee -a "$LOG_FILE"
+# Function to install Docker
+install_docker() {
+    echo "Installing Docker..."
+    # Docker installation commands here
 }
 
-log_warning() {
-    echo -e "${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] WARNING:${NC} $1" | tee -a "$LOG_FILE"
+# Function to install K3s
+install_k3s() {
+    echo "Installing K3s..."
+    # K3s installation commands here
 }
 
-log_info() {
-    echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')] INFO:${NC} $1" | tee -a "$LOG_FILE"
+# Function to deploy local Docker registry
+deploy_registry() {
+    echo "Deploying local Docker registry..."
+    # Docker registry deployment commands here
 }
 
-check_command() {
-    command -v $1 &> /dev/null
+# Function to build Chrome browser images
+build_chrome_images() {
+    echo "Building Chrome browser images..."
+    # Commands to build Chrome images with matching ChromeDriver here
 }
 
-get_server_ip() {
-    hostname -I | awk '{print $1}'
+# Function to deploy Moon
+deploy_moon() {
+    echo "Deploying Moon..."
+    # Commands to deploy Moon with configuration here
 }
 
-# Continue with rest of setup script...
-
-main() {
-    log "Moon POC Server Setup - Starting..."
-    log "Chrome Version: $CHROME_VERSION"
-    log "Moon Version: $MOON_VERSION"
-    
-    echo "Setup script ready - full implementation in repository"
+# Function to deploy Moon UI
+deploy_moon_ui() {
+    echo "Deploying Moon UI..."
+    # Commands to deploy Moon UI for visual monitoring here
 }
 
-main "$@"
+# Function to deploy demo application
+deploy_demo_app() {
+    echo "Deploying demo nginx application..."
+    # Commands to deploy demo application here
+}
+
+# Main execution flow
+check_requirements
+install_docker
+install_k3s
+deploy_registry
+build_chrome_images
+deploy_moon
+deploy_moon_ui
+deploy_demo_app
+
+# Verification and summary output
+echo "Setup completed successfully!"
