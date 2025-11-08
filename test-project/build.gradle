@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+    id 'net.serenity-bdd.serenity-gradle-plugin' version '4.0.30'
+}
+
+group = 'com.moonpoc'
+version = '1.0-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    serenityVersion = '4.0.30'
+    cucumberVersion = '7.14.0'
+}
+
+dependencies {
+    testImplementation "net.serenity-bdd:serenity-cucumber:${serenityVersion}"
+    testImplementation "net.serenity-bdd:serenity-screenplay:${serenityVersion}"
+    testImplementation "net.serenity-bdd:serenity-screenplay-webdriver:${serenityVersion}"
+    testImplementation "org.junit.platform:junit-platform-launcher:1.10.1"
+    testImplementation "org.assertj:assertj-core:3.24.2"
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+gradle.startParameter.continueOnFailure = true
